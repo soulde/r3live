@@ -53,25 +53,33 @@ Dr. Fu Zhang < fuzhang@hku.hk >.
 #include <csignal>
 #include <unistd.h>
 #include <so3_math.h>
-#include <ros/ros.h>
+//#include <ros/ros.h>
+#include <rclcpp/rclcpp.hpp>
 #include <Eigen/Core>
 #include <opencv2/opencv.hpp>
 #include <common_lib.h>
 #include <kd_tree/ikd_Tree.h>
-#include <nav_msgs/Odometry.h>
-#include <nav_msgs/Path.h>
+//#include <nav_msgs/Odometry.h>
+//#include <nav_msgs/Path.h>
+#include <nav_msgs/nav_msgs/msg/odometry.hpp>
+#include <nav_msgs/nav_msgs/msg/path.hpp>
+
 #include <opencv2/core/eigen.hpp>
-#include <visualization_msgs/Marker.h>
+//#include <visualization_msgs/Marker.h>
+#include <visualization_msgs/visualization_msgs/msg/marker.hpp>
 #include <pcl_conversions/pcl_conversions.h>
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
 #include <pcl/filters/voxel_grid.h>
 #include <pcl/kdtree/kdtree_flann.h>
 #include <pcl/io/pcd_io.h>
-#include <sensor_msgs/PointCloud2.h>
-#include <tf/transform_datatypes.h>
-#include <tf/transform_broadcaster.h>
-#include <geometry_msgs/Vector3.h>
+//#include <sensor_msgs/PointCloud2.h>
+#include <sensor_msgs/sensor_msgs/msg/point_cloud2.hpp>
+#include <tf2_ros/transform_broadcaster.h>
+//#include <tf/transform_datatypes.h>
+//#include <tf/transform_broadcaster.h>
+#include <geometry_msgs/geometry_msgs/msg/vector3.hpp>
+//#include <geometry_msgs/Vector3.h>
 #include <FOV_Checker/FOV_Checker.h>
 
 #include "r3live.hpp"
@@ -94,9 +102,10 @@ int main(int argc, char **argv)
     printf_program("R3LIVE: A Robust, Real-time, RGB-colored, LiDAR-Inertial-Visual tightly-coupled state Estimation and mapping package");
     Common_tools::printf_software_version();
     Eigen::initParallel();
-    ros::init(argc, argv, "R3LIVE_main");
-    R3LIVE * fast_lio_instance = new R3LIVE();
-    ros::Rate rate(5000);
-    bool status = ros::ok();
-    ros::spin();
+    rclcpp::init(argc, argv);
+
+    rclcpp::Node::SharedPtr node = std::make_shared<R3LIVE>();
+    rclcpp::spin(node);
+    rclcpp::shutdown();
+    return 0;
 }
