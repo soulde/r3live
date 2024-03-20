@@ -55,42 +55,35 @@ Dr. Fu Zhang < fuzhang@hku.hk >.
 #include <csignal>
 #include <unistd.h>
 #include <so3_math.h>
-//#include <ros/ros.h>
 #include <rclcpp/rclcpp.hpp>
 #include <rclcpp/node.hpp>
 #include <Eigen/Core>
 #include <opencv2/opencv.hpp>
 #include <common_lib.h>
 #include <kd_tree/ikd_Tree.h>
-//#include <nav_msgs/Odometry.h>
-//#include <nav_msgs/Path.h>
-#include <nav_msgs/nav_msgs/msg/odometry.hpp>
-#include <nav_msgs/nav_msgs/msg/path.hpp>
+#include <nav_msgs/msg/odometry.hpp>
+#include <nav_msgs/msg/path.hpp>
 #include <opencv2/core/eigen.hpp>
-//#include <visualization_msgs/Marker.h>
-#include <visualization_msgs/visualization_msgs/msg/marker.hpp>
+
+#include <visualization_msgs/msg/marker.hpp>
 #include <pcl_conversions/pcl_conversions.h>
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
 #include <pcl/filters/voxel_grid.h>
 #include <pcl/kdtree/kdtree_flann.h>
 #include <pcl/io/pcd_io.h>
-//#include <sensor_msgs/PointCloud2.h>
-//#include <tf/transform_datatypes.h>
-//#include <tf/transform_broadcaster.h>
 #include <sensor_msgs/msg/point_cloud2.hpp>
 #include <sensor_msgs/msg/imu.hpp>
 #include <tf2_ros/transform_broadcaster.h>
 
-#include <tf2_geometry_msgs/tf2_geometry_msgs.hpp>
 #include <tf2/LinearMath/Quaternion.h>
 //#include <geometry_msgs/Vector3.h>
-#include <geometry_msgs/geometry_msgs/msg/vector3.hpp>
+#include <geometry_msgs/msg/vector3.hpp>
 #include <FOV_Checker/FOV_Checker.h>
 
 #include <opencv2/highgui/highgui.hpp>
 
-#include <cv_bridge/cv_bridge/cv_bridge.h>
+#include <cv_bridge/cv_bridge.h>
 //#include <cv_bridge/cv_bridge.h>
 
 #include "lib_sophus/so3.hpp"

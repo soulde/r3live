@@ -937,14 +937,13 @@ int R3LIVE::service_LIO_update() {
             /******* Publish Odometry ******/
             tf2::Quaternion temp_q;
             temp_q.setEuler(euler_cur(0), euler_cur(1), euler_cur(2));
-            geometry_msgs::msg::Quaternion geoQuat = tf2::toMsg(temp_q);
             odomAftMapped.header.frame_id = "world";
             odomAftMapped.child_frame_id = "/aft_mapped";
             odomAftMapped.header.stamp = rclcpp::Clock().now();; // ros::Time().fromSec(last_timestamp_lidar);
-            odomAftMapped.pose.pose.orientation.x = geoQuat.x;
-            odomAftMapped.pose.pose.orientation.y = geoQuat.y;
-            odomAftMapped.pose.pose.orientation.z = geoQuat.z;
-            odomAftMapped.pose.pose.orientation.w = geoQuat.w;
+            odomAftMapped.pose.pose.orientation.x = temp_q.x();
+            odomAftMapped.pose.pose.orientation.y = temp_q.y();
+            odomAftMapped.pose.pose.orientation.z = temp_q.z();
+            odomAftMapped.pose.pose.orientation.w = temp_q.w();
             odomAftMapped.pose.pose.position.x = g_lio_state.pos_end(0);
             odomAftMapped.pose.pose.position.y = g_lio_state.pos_end(1);
             odomAftMapped.pose.pose.position.z = g_lio_state.pos_end(2);
@@ -972,10 +971,10 @@ int R3LIVE::service_LIO_update() {
             msg_body_pose.pose.position.x = g_lio_state.pos_end(0);
             msg_body_pose.pose.position.y = g_lio_state.pos_end(1);
             msg_body_pose.pose.position.z = g_lio_state.pos_end(2);
-            msg_body_pose.pose.orientation.x = geoQuat.x;
-            msg_body_pose.pose.orientation.y = geoQuat.y;
-            msg_body_pose.pose.orientation.z = geoQuat.z;
-            msg_body_pose.pose.orientation.w = geoQuat.w;
+            msg_body_pose.pose.orientation.x = temp_q.x();
+            msg_body_pose.pose.orientation.y = temp_q.y();
+            msg_body_pose.pose.orientation.z = temp_q.z();
+            msg_body_pose.pose.orientation.w = temp_q.w();
 
             /******* Publish Path ********/
             msg_body_pose.header.frame_id = "world";

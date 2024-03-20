@@ -5,10 +5,10 @@
 #include <Eigen/Eigen>
 #include <pcl/point_types.h>
 #include <pcl/point_cloud.h>
-#include <sensor_msgs/sensor_msgs/msg/imu.hpp>
-#include <sensor_msgs/sensor_msgs/msg/imu.hpp>
-#include <sensor_msgs/sensor_msgs/msg/point_cloud2.hpp>
-#include <nav_msgs/nav_msgs/msg/odometry.hpp>
+#include <sensor_msgs/msg/imu.hpp>
+#include <sensor_msgs/msg/imu.hpp>
+#include <sensor_msgs/msg/point_cloud2.hpp>
+#include <nav_msgs/msg/odometry.hpp>
 //#include <rosbag/bag.h>
 
 #include <tf2_ros/transform_broadcaster.h>

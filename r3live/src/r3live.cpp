@@ -59,31 +59,23 @@ Dr. Fu Zhang < fuzhang@hku.hk >.
 #include <opencv2/opencv.hpp>
 #include <common_lib.h>
 #include <kd_tree/ikd_Tree.h>
-//#include <nav_msgs/Odometry.h>
-//#include <nav_msgs/Path.h>
-#include <nav_msgs/nav_msgs/msg/odometry.hpp>
-#include <nav_msgs/nav_msgs/msg/path.hpp>
-
+#include <nav_msgs/msg/odometry.hpp>
+#include <nav_msgs/msg/path.hpp>
 #include <opencv2/core/eigen.hpp>
-//#include <visualization_msgs/Marker.h>
-#include <visualization_msgs/visualization_msgs/msg/marker.hpp>
+#include <visualization_msgs/msg/marker.hpp>
 #include <pcl_conversions/pcl_conversions.h>
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
 #include <pcl/filters/voxel_grid.h>
 #include <pcl/kdtree/kdtree_flann.h>
 #include <pcl/io/pcd_io.h>
-//#include <sensor_msgs/PointCloud2.h>
-#include <sensor_msgs/sensor_msgs/msg/point_cloud2.hpp>
+#include <sensor_msgs/msg/point_cloud2.hpp>
 #include <tf2_ros/transform_broadcaster.h>
-//#include <tf/transform_datatypes.h>
-//#include <tf/transform_broadcaster.h>
-#include <geometry_msgs/geometry_msgs/msg/vector3.hpp>
-//#include <geometry_msgs/Vector3.h>
+#include <geometry_msgs/msg/vector3.hpp>
 #include <FOV_Checker/FOV_Checker.h>
 
-#include "r3live.hpp"
 
+#include "r3live.hpp"
 #include "loam/IMU_Processing.hpp"
 #include "tools_logger.hpp"
 #include "tools_color_printf.hpp"
