@@ -58,17 +58,23 @@ using std::endl;
 namespace Common_tools {
     template<typename T>
     inline T
-    get_ros_parameter(rclcpp::Node& nh, const std::string &parameter_name, T &parameter, T default_val) {
-        parameter = nh.declare_parameter<T>(parameter_name.c_str(), default_val);
-        nh.get_parameter(parameter_name.c_str(), parameter);
-        // ENABLE_SCREEN_PRINTF;
-        cout << "[Ros_parameter]: " << parameter_name << " ==> " << parameter << std::endl;
+    get_ros_parameter(rclcpp::Node &nh, const std::string &parameter_name, T &parameter, T default_val) {
+        try {
+            parameter = nh.declare_parameter<T>(parameter_name.c_str(), default_val);
+            nh.get_parameter_or(parameter_name.c_str(), parameter);
+            // ENABLE_SCREEN_PRINTF;/
+            cout << "[Ros_parameter]: " << parameter_name << " ==> " << parameter << std::endl;
+        }
+        catch (std::exception e) {
+            std::cout << parameter_name << std::endl;
+        }
         return parameter;
     }
 
     template<typename T>
-    inline std::vector<T> get_ros_parameter_array(rclcpp::Node& nh, const std::string& parameter_name) {
-        std::vector<T> config_vector = nh.declare_parameter<std::vector<T>>(parameter_name.c_str(), std::vector<T>());
+    inline std::vector <T> get_ros_parameter_array(rclcpp::Node &nh, const std::string &parameter_name) {
+        std::vector <T> config_vector =
+                nh.declare_parameter < std::vector < T >> (parameter_name.c_str(), std::vector<T>());
         nh.get_parameter(parameter_name, config_vector);
         cout << "[Ros_configurations]: " << parameter_name << ":{  ";
         for (int i = 0; i < config_vector.size(); i++) {

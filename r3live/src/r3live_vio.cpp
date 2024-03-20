@@ -266,7 +266,7 @@ void R3LIVE::service_process_img_buffer() {
         // To avoid uncompress so much image buffer, reducing the use of memory.
         if (m_queue_image_with_pose.size() > 4) {
             while (m_queue_image_with_pose.size() > 4) {
-                rclcpp::spin_some(static_cast<rclcpp::Node::SharedPtr>(this));
+//                rclcpp::spin_some(static_cast<rclcpp::Node::SharedPtr>(this));
                 std::this_thread::sleep_for(std::chrono::milliseconds(2));
                 std::this_thread::yield();
             }
@@ -275,7 +275,7 @@ void R3LIVE::service_process_img_buffer() {
         double img_rec_time;
         if (sub_image_typed == 2) {
             while (g_received_compressed_img_msg.size() == 0) {
-                rclcpp::spin_some(static_cast<rclcpp::Node::SharedPtr>(this));
+//                rclcpp::spin_some(static_cast<rclcpp::Node::SharedPtr>(this));
                 std::this_thread::sleep_for(std::chrono::milliseconds(1));
                 std::this_thread::yield();
             }
@@ -295,7 +295,7 @@ void R3LIVE::service_process_img_buffer() {
             mutex_image_callback.unlock();
         } else {
             while (g_received_img_msg.size() == 0) {
-                rclcpp::spin_some(static_cast<rclcpp::Node::SharedPtr>(this));
+//                rclcpp::spin_some(static_cast<rclcpp::Node::SharedPtr>(this));
                 std::this_thread::sleep_for(std::chrono::milliseconds(1));
                 std::this_thread::yield();
             }
@@ -410,12 +410,12 @@ void R3LIVE::process_image(cv::Mat &temp_img, double msg_time) {
 void R3LIVE::load_vio_parameters() {
 
     std::vector<double> camera_intrinsic_data, camera_dist_coeffs_data, camera_ext_R_data, camera_ext_t_data;
-    Common_tools::get_ros_parameter(*this, "r3live_vio/image_width", m_vio_image_width, 1280.);
-    Common_tools::get_ros_parameter(*this, "r3live_vio/image_height", m_vio_image_heigh, 1024.);
-    camera_intrinsic_data = Common_tools::get_ros_parameter_array<double>(*this, "r3live_vio/camera_intrinsic");
-    camera_dist_coeffs_data = Common_tools::get_ros_parameter_array<double>(*this, "r3live_vio/camera_dist_coeffs");
-    camera_ext_R_data = Common_tools::get_ros_parameter_array<double>(*this, "r3live_vio/camera_ext_R");
-    camera_ext_t_data = Common_tools::get_ros_parameter_array<double>(*this, "r3live_vio/camera_ext_t");
+    Common_tools::get_ros_parameter(*this, "r3live_vio.image_width", m_vio_image_width, 1280.);
+    Common_tools::get_ros_parameter(*this, "r3live_vio.image_height", m_vio_image_heigh, 1024.);
+    camera_intrinsic_data = Common_tools::get_ros_parameter_array<double>(*this, "r3live_vio.camera_intrinsic");
+    camera_dist_coeffs_data = Common_tools::get_ros_parameter_array<double>(*this, "r3live_vio.camera_dist_coeffs");
+    camera_ext_R_data = Common_tools::get_ros_parameter_array<double>(*this, "r3live_vio.camera_ext_R");
+    camera_ext_t_data = Common_tools::get_ros_parameter_array<double>(*this, "r3live_vio.camera_ext_t");
 
     CV_Assert((m_vio_image_width != 0 && m_vio_image_heigh != 0));
 
@@ -914,7 +914,7 @@ void R3LIVE::service_pub_rgb_maps() {
         return;
     }
     while (1) {
-        rclcpp::spin_some(static_cast<rclcpp::Node::SharedPtr>(this));
+//        rclcpp::spin_some(static_cast<rclcpp::Node::SharedPtr>(this));
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
         pcl::PointCloud<pcl::PointXYZRGB> pc_rgb;
         sensor_msgs::msg::PointCloud2 ros_pc_msg;
@@ -951,7 +951,7 @@ void R3LIVE::service_pub_rgb_maps() {
                 }
                 m_pub_rgb_render_pointcloud_ptr_vec[cur_topic_idx]->publish(ros_pc_msg);
                 std::this_thread::sleep_for(std::chrono::microseconds(sleep_time_aft_pub));
-                rclcpp::spin_some(static_cast<rclcpp::Node::SharedPtr>(this));
+//                rclcpp::spin_some(static_cast<rclcpp::Node::SharedPtr>(this));
                 cur_topic_idx++;
             }
         }
@@ -965,7 +965,7 @@ void R3LIVE::service_pub_rgb_maps() {
                     std::string("/RGB_map_").append(std::to_string(cur_topic_idx)), 100);
         }
         std::this_thread::sleep_for(std::chrono::microseconds(sleep_time_aft_pub));
-        rclcpp::spin_some(static_cast<rclcpp::Node::SharedPtr>(this));
+//        rclcpp::spin_some(static_cast<rclcpp::Node::SharedPtr>(this));
         m_pub_rgb_render_pointcloud_ptr_vec[cur_topic_idx]->publish(ros_pc_msg);
         cur_topic_idx++;
         if (cur_topic_idx >= 45) // Maximum pointcloud topics = 45.
@@ -1033,14 +1033,14 @@ void R3LIVE::service_VIO_update() {
     while (rclcpp::ok()) {
         cv_keyboard_callback();
         while (g_camera_lidar_queue.m_if_have_lidar_data == 0) {
-            rclcpp::spin_some(static_cast<rclcpp::Node::SharedPtr>(this));
+//            rclcpp::spin_some(static_cast<rclcpp::Node::SharedPtr>(this));
             std::this_thread::sleep_for(std::chrono::milliseconds(THREAD_SLEEP_TIM));
             std::this_thread::yield();
             continue;
         }
 
         if (m_queue_image_with_pose.size() == 0) {
-            rclcpp::spin_some(static_cast<rclcpp::Node::SharedPtr>(this));
+//            rclcpp::spin_some(static_cast<rclcpp::Node::SharedPtr>(this));
             std::this_thread::sleep_for(std::chrono::milliseconds(THREAD_SLEEP_TIM));
             std::this_thread::yield();
             continue;
@@ -1068,7 +1068,7 @@ void R3LIVE::service_VIO_update() {
             std::vector<std::shared_ptr<RGB_pts> > rgb_pts_vec;
             // while ( ( m_map_rgb_pts.is_busy() ) || ( ( m_map_rgb_pts.m_rgb_pts_vec.size() <= 100 ) ) )
             while (((m_map_rgb_pts.m_rgb_pts_vec.size() <= 100))) {
-                rclcpp::spin_some(static_cast<rclcpp::Node::SharedPtr>(this));
+//                rclcpp::spin_some(static_cast<rclcpp::Node::SharedPtr>(this));
                 std::this_thread::sleep_for(std::chrono::milliseconds(1));
             }
             set_image_pose(img_pose, g_lio_state); // For first frame pose, we suppose that the motion is static.
@@ -1082,7 +1082,7 @@ void R3LIVE::service_VIO_update() {
         g_camera_frame_idx++;
         tim.tic("Wait");
         while (g_camera_lidar_queue.if_camera_can_process() == false) {
-            rclcpp::spin_some(static_cast<rclcpp::Node::SharedPtr>(this));
+//            rclcpp::spin_some(static_cast<rclcpp::Node::SharedPtr>(this));
             std::this_thread::sleep_for(std::chrono::milliseconds(THREAD_SLEEP_TIM));
             std::this_thread::yield();
             cv_keyboard_callback();

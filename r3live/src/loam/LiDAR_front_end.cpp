@@ -120,9 +120,9 @@ void LidarFrontEnd::horizon_handler(const livox_ros_driver2::msg::CustomMsg::Sha
     }
     rclcpp::Time ct(msg->timebase);
 
-    pub_func(pl_full, pub_full, msg->header.stamp);
-    pub_func(pl_surf, pub_surf, msg->header.stamp);
-    pub_func(pl_corn, pub_corn, msg->header.stamp);
+    pub_func(pl_full, pub_full, rclcpp::Time(msg->header.stamp));
+    pub_func(pl_surf, pub_surf, rclcpp::Time(msg->header.stamp));
+    pub_func(pl_corn, pub_corn, rclcpp::Time(msg->header.stamp));
 }
 
 int orders[16] = {0, 2, 4, 6, 8, 10, 12, 14, 1, 3, 5, 7, 9, 11, 13, 15};
@@ -172,6 +172,7 @@ void LidarFrontEnd::oust64_handler(const sensor_msgs::msg::PointCloud2::SharedPt
     uint plsize = pl_orig.size();
 
     double time_stamp = rclcpp::Time(msg->header.stamp).seconds();
+    std::cout<<time_stamp<<std::endl;
     pl_processed.clear();
     pl_processed.reserve(pl_orig.points.size());
     for (int i = 0; i < pl_orig.points.size(); i++) {
@@ -212,9 +213,9 @@ void LidarFrontEnd::oust64_handler(const sensor_msgs::msg::PointCloud2::SharedPt
             }
         }
     }
-    pub_func(pl_processed, pub_full, msg->header.stamp);
-    pub_func(pl_processed, pub_surf, msg->header.stamp);
-    pub_func(pl_processed, pub_corn, msg->header.stamp);
+    pub_func(pl_processed, pub_full, rclcpp::Time(msg->header.stamp));
+    pub_func(pl_processed, pub_surf, rclcpp::Time(msg->header.stamp));
+    pub_func(pl_processed, pub_corn, rclcpp::Time(msg->header.stamp));
 }
 
 
@@ -609,28 +610,28 @@ LidarFrontEnd::edge_jump_judge(const pcl::PointCloud<PointType> &pl, vector<orgt
 }
 
 LidarFrontEnd::LidarFrontEnd() : rclcpp::Node("LiDAR_front_end") {
-    get_ros_parameter(*this, "Lidar_front_end/lidar_type", lidar_type, 0);
-    get_ros_parameter(*this, "Lidar_front_end/blind", blind, 0.1);
+    get_ros_parameter(*this, "Lidar_front_end.lidar_type", lidar_type, 0);
+    get_ros_parameter(*this, "Lidar_front_end.blind", blind, 0.1);
 
-    get_ros_parameter(*this, "Lidar_front_end/inf_bound", inf_bound, 4.);
-    get_ros_parameter(*this, "Lidar_front_end/N_SCANS", N_SCANS, 1);
-    get_ros_parameter(*this, "Lidar_front_end/group_size", group_size, 8);
-    get_ros_parameter(*this, "Lidar_front_end/disA", disA, 0.01);
-    get_ros_parameter(*this, "Lidar_front_end/disB", disB, 0.1);
-    get_ros_parameter(*this, "Lidar_front_end/p2l_ratio", p2l_ratio, 225.);
-    get_ros_parameter(*this, "Lidar_front_end/limit_maxmid", limit_maxmid, 6.25);
-    get_ros_parameter(*this, "Lidar_front_end/limit_midmin", limit_midmin, 6.25);
-    get_ros_parameter(*this, "Lidar_front_end/limit_maxmin", limit_maxmin, 3.24);
-    get_ros_parameter(*this, "Lidar_front_end/jump_up_limit", jump_up_limit, 170.0);
-    get_ros_parameter(*this, "Lidar_front_end/jump_down_limit", jump_down_limit, 8.0);
-    get_ros_parameter(*this, "Lidar_front_end/cos160", cos160, 160.0);
-    get_ros_parameter(*this, "Lidar_front_end/edgea", edgea, 2.);
-    get_ros_parameter(*this, "Lidar_front_end/edgeb", edgeb, 0.1);
-    get_ros_parameter(*this, "Lidar_front_end/smallp_intersect", smallp_intersect, 172.5);
-    get_ros_parameter(*this, "Lidar_front_end/smallp_ratio", smallp_ratio, 1.2);
-    get_ros_parameter(*this, "Lidar_front_end/point_filter_num", point_filter_num, 1);
-    get_ros_parameter(*this, "Lidar_front_end/point_step", g_LiDAR_sampling_point_step, 3);
-    get_ros_parameter(*this, "Lidar_front_end/using_raw_point", g_if_using_raw_point, 1);
+    get_ros_parameter(*this, "Lidar_front_end.inf_bound", inf_bound, 4.);
+    get_ros_parameter(*this, "Lidar_front_end.N_SCANS", N_SCANS, 1);
+    get_ros_parameter(*this, "Lidar_front_end.group_size", group_size, 8);
+    get_ros_parameter(*this, "Lidar_front_end.disA", disA, 0.01);
+    get_ros_parameter(*this, "Lidar_front_end.disB", disB, 0.1);
+    get_ros_parameter(*this, "Lidar_front_end.p2l_ratio", p2l_ratio, 225.);
+    get_ros_parameter(*this, "Lidar_front_end.limit_maxmid", limit_maxmid, 6.25);
+    get_ros_parameter(*this, "Lidar_front_end.limit_midmin", limit_midmin, 6.25);
+    get_ros_parameter(*this, "Lidar_front_end.limit_maxmin", limit_maxmin, 3.24);
+    get_ros_parameter(*this, "Lidar_front_end.jump_up_limit", jump_up_limit, 170.0);
+    get_ros_parameter(*this, "Lidar_front_end.jump_down_limit", jump_down_limit, 8.0);
+    get_ros_parameter(*this, "Lidar_front_end.cos160", cos160, 160.0);
+    get_ros_parameter(*this, "Lidar_front_end.edgea", edgea, 2.);
+    get_ros_parameter(*this, "Lidar_front_end.edgeb", edgeb, 0.1);
+    get_ros_parameter(*this, "Lidar_front_end.smallp_intersect", smallp_intersect, 172.5);
+    get_ros_parameter(*this, "Lidar_front_end.smallp_ratio", smallp_ratio, 1.2);
+    get_ros_parameter(*this, "Lidar_front_end.point_filter_num", point_filter_num, 1);
+    get_ros_parameter(*this, "Lidar_front_end.point_step", g_LiDAR_sampling_point_step, 3);
+    get_ros_parameter(*this, "Lidar_front_end.using_raw_point", g_if_using_raw_point, 1);
 
     jump_up_limit = cos(jump_up_limit / 180 * M_PI);
     jump_down_limit = cos(jump_down_limit / 180 * M_PI);

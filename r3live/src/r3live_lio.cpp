@@ -1,21 +1,21 @@
-/* 
-This code is the implementation of our paper "R3LIVE: A Robust, Real-time, RGB-colored, 
+/*
+This code is the implementation of our paper "R3LIVE: A Robust, Real-time, RGB-colored,
 LiDAR-Inertial-Visual tightly-coupled state Estimation and mapping package".
 
 Author: Jiarong Lin   < ziv.lin.ljr@gmail.com >
 
 If you use any code of this repo in your academic research, please cite at least
 one of our papers:
-[1] Lin, Jiarong, and Fu Zhang. "R3LIVE: A Robust, Real-time, RGB-colored, 
-    LiDAR-Inertial-Visual tightly-coupled state Estimation and mapping package." 
+[1] Lin, Jiarong, and Fu Zhang. "R3LIVE: A Robust, Real-time, RGB-colored,
+    LiDAR-Inertial-Visual tightly-coupled state Estimation and mapping package."
 [2] Xu, Wei, et al. "Fast-lio2: Fast direct lidar-inertial odometry."
 [3] Lin, Jiarong, et al. "R2LIVE: A Robust, Real-time, LiDAR-Inertial-Visual
-     tightly-coupled state Estimator and mapping." 
-[4] Xu, Wei, and Fu Zhang. "Fast-lio: A fast, robust lidar-inertial odometry 
+     tightly-coupled state Estimator and mapping."
+[4] Xu, Wei, and Fu Zhang. "Fast-lio: A fast, robust lidar-inertial odometry
     package by tightly-coupled iterated kalman filter."
-[5] Cai, Yixi, Wei Xu, and Fu Zhang. "ikd-Tree: An Incremental KD Tree for 
+[5] Cai, Yixi, Wei Xu, and Fu Zhang. "ikd-Tree: An Incremental KD Tree for
     Robotic Applications."
-[6] Lin, Jiarong, and Fu Zhang. "Loam-livox: A fast, robust, high-precision 
+[6] Lin, Jiarong, and Fu Zhang. "Loam-livox: A fast, robust, high-precision
     LiDAR odometry and mapping package for LiDARs of small FoV."
 
 For commercial use, please contact me < ziv.lin.ljr@gmail.com > and
@@ -50,6 +50,7 @@ Dr. Fu Zhang < fuzhang@hku.hk >.
 void R3LIVE::imu_cbk(const sensor_msgs::msg::Imu::SharedPtr msg_in) {
     sensor_msgs::msg::Imu::SharedPtr msg(new sensor_msgs::msg::Imu(*msg_in));
     double timestamp = rclcpp::Time(msg->header.stamp).seconds();
+
     g_camera_lidar_queue.imu_in(timestamp);
     mtx_buffer.lock();
     if (timestamp < last_timestamp_imu) {
@@ -84,10 +85,10 @@ void printf_field_name(sensor_msgs::msg::PointCloud2::ConstSharedPtr msg) {
 
 
 bool R3LIVE::get_pointcloud_data_from_ros_message(sensor_msgs::msg::PointCloud2::ConstSharedPtr &msg,
-                                                  pcl::PointCloud<pcl::PointXYZINormal> &pcl_pc) {
+                                                  pcl::PointCloud <pcl::PointXYZINormal> &pcl_pc) {
 
     // printf("Frame [%d] %.3f ", g_LiDAR_frame_index,  msg->header.stamp.toSec() - g_camera_lidar_queue.m_first_imu_time);
-    pcl::PointCloud<pcl::PointXYZI> res_pc;
+    pcl::PointCloud <pcl::PointXYZI> res_pc;
     scope_color(ANSI_COLOR_YELLOW_BOLD);
     // printf_field_name(msg);
     if (msg->fields.size() < 3) {
@@ -104,7 +105,7 @@ bool R3LIVE::get_pointcloud_data_from_ros_message(sensor_msgs::msg::PointCloud2:
         } else if ((msg->fields.size() == 4) && (msg->fields[3].name == "rgb")) {
             double maximum_range = 5;
             get_ros_parameter(*this, "iros_range", maximum_range, 5.);
-            pcl::PointCloud<pcl::PointXYZRGB> pcl_rgb_pc;
+            pcl::PointCloud <pcl::PointXYZRGB> pcl_rgb_pc;
             pcl::fromROSMsg(*msg, pcl_rgb_pc);
             double lidar_point_time = rclcpp::Time(msg->header.stamp).seconds();
             int pt_count = 0;
@@ -150,7 +151,7 @@ bool R3LIVE::sync_packages(MeasureGroup &meas) {
         meas.lidar_beg_time = rclcpp::Time(lidar_buffer.front()->header.stamp).seconds();
         lidar_end_time = meas.lidar_beg_time + meas.lidar->points.back().curvature / double(1000);
         meas.lidar_end_time = lidar_end_time;
-        // printf("Input LiDAR time = %.3f, %.3f\n", meas.lidar_beg_time, meas.lidar_end_time);
+//         printf("Input LiDAR time = %.3f, %.3f\n", meas.lidar_beg_time, meas.lidar_end_time);
         // printf_line_mem_MB;
         lidar_pushed = true;
     }
@@ -163,6 +164,7 @@ bool R3LIVE::sync_packages(MeasureGroup &meas) {
     double imu_time = rclcpp::Time(imu_buffer_lio.front()->header.stamp).seconds();
     meas.imu.clear();
     while ((!imu_buffer_lio.empty()) && (imu_time < lidar_end_time)) {
+
         imu_time = rclcpp::Time(imu_buffer_lio.front()->header.stamp).seconds();
         if (imu_time > lidar_end_time + 0.02)
             break;
@@ -173,7 +175,7 @@ bool R3LIVE::sync_packages(MeasureGroup &meas) {
     lidar_buffer.pop_front();
     lidar_pushed = false;
     // if (meas.imu.empty()) return false;
-    // std::cout<<"[IMU Sycned]: "<<imu_time<<" "<<lidar_end_time<<std::endl;
+//    std::cout << "[IMU Sycned]: " << imu_time << " " << lidar_end_time << std::endl;
     return true;
 }
 
@@ -414,7 +416,7 @@ void R3LIVE::lasermap_fov_segment() {
 
 void R3LIVE::feat_points_cbk(const sensor_msgs::msg::PointCloud2::SharedPtr msg_in) {
     sensor_msgs::msg::PointCloud2::SharedPtr msg(new sensor_msgs::msg::PointCloud2(*msg_in));
-    msg->header.stamp = rclcpp::Time(rclcpp::Time(msg_in->header.stamp).seconds() - m_lidar_imu_time_delay);
+    msg->header.stamp = rclcpp::Time((rclcpp::Time(msg_in->header.stamp).seconds() - m_lidar_imu_time_delay)*1e9);
     if (g_camera_lidar_queue.lidar_in(rclcpp::Time(msg_in->header.stamp).seconds() + 0.1) == 0) {
         return;
     }
@@ -466,30 +468,34 @@ int R3LIVE::service_LIO_update() {
         featsArray[i].reset(new PointCloudXYZINormal());
     }
 
-    std::shared_ptr<ImuProcess> p_imu = std::make_shared<ImuProcess>(static_cast<rclcpp::Node::SharedPtr>(this));
+    std::shared_ptr <ImuProcess> p_imu = std::make_shared<ImuProcess>(static_cast<rclcpp::Node::SharedPtr>(this));
+
     m_imu_process = p_imu;
     //------------------------------------------------------------------------------------------------------
     rclcpp::Rate rate(5000);
     bool status = rclcpp::ok();
     g_camera_lidar_queue.m_liar_frame_buf = &lidar_buffer;
     set_initial_state_cov(g_lio_state);
+
     while (rclcpp::ok()) {
         if (flg_exit)
             break;
-        rclcpp::spin_some(static_cast<rclcpp::Node::SharedPtr>(this));
+//        rclcpp::spin_some();
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
         while (g_camera_lidar_queue.if_lidar_can_process() == false) {
-            rclcpp::spin_some(static_cast<rclcpp::Node::SharedPtr>(this));
+//            rclcpp::spin_some(static_cast<rclcpp::Node::SharedPtr>(this));
             std::this_thread::yield();
             std::this_thread::sleep_for(std::chrono::milliseconds(THREAD_SLEEP_TIM));
         }
-        std::unique_lock<std::mutex> lock(m_mutex_lio_process);
+
+        std::unique_lock <std::mutex> lock(m_mutex_lio_process);
         if (1) {
             // printf_line;
             Common_tools::Timer tim;
             if (sync_packages(Measures) == 0) {
                 continue;
             }
+
             int lidar_can_update = 1;
             g_lidar_star_tim = frame_first_pt_time;
             if (flg_reset) {
@@ -508,7 +514,6 @@ int R3LIVE::service_LIO_update() {
             svd_time = 0;
             t0 = omp_get_wtime();
             p_imu->Process(Measures, g_lio_state, feats_undistort);
-
             g_camera_lidar_queue.g_noise_cov_acc = p_imu->cov_acc;
             g_camera_lidar_queue.g_noise_cov_gyro = p_imu->cov_gyr;
             StatesGroup state_propagate(g_lio_state);
@@ -580,8 +585,8 @@ int R3LIVE::service_LIO_update() {
                 }
 
                 std::vector<bool> point_selected_surf(feats_down_size, true);
-                std::vector<std::vector<int> > pointSearchInd_surf(feats_down_size);
-                std::vector<PointVector> Nearest_Points(feats_down_size);
+                std::vector <std::vector<int>> pointSearchInd_surf(feats_down_size);
+                std::vector <PointVector> Nearest_Points(feats_down_size);
 
                 int rematch_num = 0;
                 bool rematch_en = 0;
@@ -886,7 +891,7 @@ int R3LIVE::service_LIO_update() {
                 // ANCHOR - RGB maps update
                 wait_render_thread_finish();
                 if (m_if_record_mvs) {
-                    std::vector<std::shared_ptr<RGB_pts> > pts_last_hitted;
+                    std::vector <std::shared_ptr<RGB_pts>> pts_last_hitted;
                     pts_last_hitted.reserve(1e6);
                     m_number_of_new_visited_voxel = m_map_rgb_pts.append_points_to_global_map(
                             *laserCloudFullResColor, Measures.lidar_end_time - g_camera_lidar_queue.m_first_imu_time,

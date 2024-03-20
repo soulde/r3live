@@ -22,8 +22,10 @@ def generate_launch_description():
 
     declare_lidar_config_file_cmd = DeclareLaunchArgument(
         'lidar_config',
-        default_value=os.path.join(pkg_dir, 'config', 'config.yaml'),
+        default_value=os.path.join(pkg_dir, 'config', 'r3live_config.yaml'),
         description='Full path to the filter chain config file to use')
+        
+    print(os.path.join(pkg_dir, 'config', 'r3live_config.yaml'))
 
     declare_rviz_config_file_cmd = DeclareLaunchArgument(
         'rviz_config',
@@ -33,7 +35,7 @@ def generate_launch_description():
     param = [{"LiDAR_pointcloud_topic": "/laser_cloud_flat"},
              {"IMU_topic": "/livox/imu"},
              {"Image_topic": "/camera/image_color"},
-             {"r3live_common/map_output_dir": os.path.join(pkg_dir,"r3live_output")},
+             {"r3live_common.map_output_dir": os.path.join(pkg_dir,"r3live_output")},
              config_file]
 
 

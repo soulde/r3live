@@ -296,15 +296,16 @@ void ImuProcess::lic_point_cloud_undistort(const MeasureGroup &meas, const State
     auto v_imu = meas.imu;
     v_imu.push_front(last_imu_);
     const double &imu_end_time = rclcpp::Time(v_imu.back()->header.stamp).seconds();
+    const double &imu_beg_time = rclcpp::Time(v_imu.front()->header.stamp).seconds();
     const double &pcl_beg_time = meas.lidar_beg_time;
     /*** sort point clouds by offset time ***/
     pcl_out = *(meas.lidar);
     std::sort(pcl_out.points.begin(), pcl_out.points.end(), time_list);
     const double &pcl_end_time = pcl_beg_time + pcl_out.points.back().curvature / double(1000);
-    /*std::cout << "[ IMU Process ]: Process lidar from " << pcl_beg_time - g_lidar_star_tim << " to " << pcl_end_time- g_lidar_star_tim << ", "
+    std::cout << "[ IMU Process ]: Process lidar from " << pcl_beg_time - g_lidar_star_tim << " to " << pcl_end_time- g_lidar_star_tim << ", "
               << meas.imu.size() << " imu msgs from " << imu_beg_time- g_lidar_star_tim << " to " << imu_end_time- g_lidar_star_tim
               << ", last tim: " << state_inout.last_update_time- g_lidar_star_tim << std::endl;
-    */
+
     /*** Initialize IMU pose ***/
     IMU_pose.clear();
     // IMUpose.push_back(set_pose6d(0.0, Zero3d, Zero3d, state.vel_end, state.pos_end, state.rot_end));
@@ -420,7 +421,7 @@ void ImuProcess::Process(const MeasureGroup &meas, StatesGroup &stat, PointCloud
     // t1 = omp_get_wtime();
 
     if (meas.imu.empty()) {
-        // std::cout << "no imu data" << std::endl;
+         std::cout << "no imu data" << std::endl;
         return;
     };
     assert(meas.lidar != nullptr);
